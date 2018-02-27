@@ -17,6 +17,9 @@ let goldenapplepic;
 let psypic;
 let psystartpic;
 let pikostartpic;
+let wasdpic;
+let arrowpic;
+let arrowpointpic;
 let songsound;
 let positivsound;
 let negativesound;
@@ -24,6 +27,7 @@ let ppapvideo;
 let psyvideo;
 let state = true;
 let menu;
+let rulesbutton;
 let menustate = false;
 let playstate = 0;
 let newtime = 0;
@@ -37,6 +41,9 @@ function preload() {
   goldenapplepic = loadImage("images/GOLDENAPPLE.png");
   tomatopic = loadImage("images/TOMATO.png");
   psypic = loadImage("images/PSYEDITED.png");
+  wasdpic = loadImage("images/WASD.png");
+  arrowpic = loadImage("images/ARROW.png");
+  arrowpointpic = loadImage("images/ArrowPoint.png");
 
   psystartpic = loadImage("images/PSY_START.png");
   pikostartpic = loadImage("images/PPAP_START.png");
@@ -47,6 +54,7 @@ function preload() {
 }
 
 function setup() {
+  angleMode(DEGREES);
   createCanvas(1425, 825);
   background(51);
   ppapvideo = createVideo("video/PPAP_VIDEO.mp4");
@@ -62,13 +70,13 @@ function setup() {
   textAlign(CENTER);
   text("PPAP-GAME", width / 2, 150);
   pop();
-  menu = createButton("Start the game");
+  menu = createButton("Go to rules");
   let col = color(255, 50, 100);
   menu.style("background-color", col);
   menu.style("font-size", "30px")
   menu.size(200, 100);
   menu.position(width / 2 - 100, height / 2 - 50);
-  menu.mousePressed(execute);
+  menu.mousePressed(rules);
 
   s = new PiKo(pikotaropic);
   ps = new Psy(psypic);
@@ -117,8 +125,44 @@ function pickLocationGoldens(i) {
   goldens[i].mult(scl);
 }
 
+function rules() {
+  push();
+  background(51);
+  menu.hide();
+  fill(255);
+  textSize(100);
+  textAlign(CENTER);
+  text("Rules:", width / 2, 150);
+  image(wasdpic, width / 6, 250, 100, 100);
+  textSize(32);
+  textAlign(LEFT);
+  text("Use W,A,S,D to move Piko Taro (top left).", width / 3 - 75, 325);
+  image(arrowpic, width / 6, 400, 115, 100);
+  text("Use up, down, left, right /- arrow keys to move Psy (bottom right).", width / 3 - 75, 475);
+  image(pikotaropic, 75, 75, 75, 75);
+  image(psypic, width - 75 - 75, height - 75 - 75, 75, 75);
+  push();
+  translate(120 + 75, 120 + 75);
+  rotate(90);
+  image(arrowpointpic, -30, 0, 50, 50);
+  pop();
+  push();
+  translate(width - 75 - 75, height - 75 - 75);
+  rotate(-90);
+  image(arrowpointpic, 0, -75, 50, 50);
+  pop();
+  rulesbutton = createButton("Are you ready?")
+  rulesbutton.position(width / 2 - 100, height - 250);
+  rulesbutton.style("background-color", color(255, 50, 100));
+  rulesbutton.style("font-size", "30px");
+  rulesbutton.size(200, 100);
+  rulesbutton.mousePressed(execute);
+  pop();
+}
+
 function execute() {
   menustate = true;
+  rulesbutton.hide();
 }
 
 
