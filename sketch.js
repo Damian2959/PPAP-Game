@@ -28,6 +28,8 @@ let psyvideo;
 let state = true;
 let menu;
 let rulesbutton;
+let backbutton;
+let startbutton;
 let menustate = false;
 let playstate = 0;
 let newtime = 0;
@@ -77,6 +79,12 @@ function setup() {
   menu.size(200, 100);
   menu.position(width / 2 - 100, height / 2 - 50);
   menu.mousePressed(rules);
+  push();
+  fill(255);
+  textSize(16);
+  textAlign(CENTER);
+  text("Please use fullscreen", width / 2, height - 325);
+  pop();
 
   s = new PiKo(pikotaropic);
   ps = new Psy(psypic);
@@ -151,18 +159,66 @@ function rules() {
   rotate(-90);
   image(arrowpointpic, 0, -75, 50, 50);
   pop();
-  rulesbutton = createButton("Are you ready?")
+  rulesbutton = createButton("Go to scoring");
   rulesbutton.position(width / 2 - 100, height - 250);
   rulesbutton.style("background-color", color(255, 50, 100));
   rulesbutton.style("font-size", "30px");
   rulesbutton.size(200, 100);
-  rulesbutton.mousePressed(execute);
+  rulesbutton.mousePressed(scoringboard);
   pop();
 }
 
-function execute() {
-  menustate = true;
+function scoringboard() {
+  push();
+  background(51);
   rulesbutton.hide();
+  push();
+  backbutton = createButton("Back to rules");
+  backbutton.position(width - 300, height / 3);
+  backbutton.style("background-color", color(255, 50, 100));
+  backbutton.style("font-size", "30px");
+  backbutton.size(200, 100);
+  backbutton.mousePressed(back);
+  pop();
+  push();
+  startbutton = createButton("Start the game!");
+  startbutton.position(width - 300, height / 2 + 100);
+  startbutton.style("background-color", color(255, 50, 100));
+  startbutton.style("font-size", "30px");
+  startbutton.size(200, 100);
+  startbutton.mousePressed(execute);
+  fill(255);
+  textSize(14);
+  textAlign(LEFT);
+  text("Please turn up your volume", width - 285, height / 2 + 225);
+  pop();
+  fill(255);
+  textSize(100);
+  textAlign(CENTER);
+  text("Scoring:", width / 2, 150);
+  textAlign(LEFT);
+  image(applepic, width / 3 + 50, 225, 100, 100);
+  textSize(50);
+  text("= 1 point.", width / 2, 300);
+  image(goldenapplepic, width / 3 + 50, 375, 100, 100);
+  text("= 3 points.", width / 2, 450);
+  image(penpic, width / 3 + 50, 525, 100, 100);
+  text("= 1 point.", width / 2, 600);
+  image(tomatopic, width / 3 + 50, 675, 100, 100);
+  text("= -2 points.", width / 2, 750);
+  pop();
+}
+
+function back() {
+  backbutton.hide();
+  startbutton.hide();
+  rules();
+}
+
+function execute() {
+  backbutton.hide();
+  startbutton.hide();
+  menustate = true;
 }
 
 
@@ -201,7 +257,7 @@ function draw() {
 
     for (var i = 0; i < tomatos.length; i++) {
       if (s.eat(tomatos[i])) {
-        pikoscore -= 3;
+        pikoscore -= 2;
         time = millis();
         pickLocationTomatos(i);
         negativesound.play();
@@ -228,7 +284,7 @@ function draw() {
 
     for (var i = 0; i < goldens.length; i++) {
       if (s.eat(goldens[i])) {
-        pikoscore += 1;
+        pikoscore += 3;
         time = millis();
         pickLocationGoldens(i);
         positivsound.play();
@@ -237,7 +293,7 @@ function draw() {
 
     for (var i = 0; i < tomatos.length; i++) {
       if (ps.intersects(tomatos[i])) {
-        psyscore -= 4;
+        psyscore -= 2;
         time = millis();
         pickLocationTomatos(i);
         negativesound.play();
@@ -254,7 +310,7 @@ function draw() {
     }
     for (var i = 0; i < goldens.length; i++) {
       if (ps.intersects(goldens[i])) {
-        psyscore += 1;
+        psyscore += 3;
         time = millis();
         pickLocationGoldens(i);
         positivsound.play();
@@ -267,13 +323,6 @@ function draw() {
         pickLocationApples(i);
         positivsound.play();
       }
-    }
-
-    if (ps.intersects(goldens)) {
-      psyscore += 3;
-      time = millis();
-      pickLocationGolden();
-      positivsound.play();
     }
 
     let t = floor(timeperiod - (millis() - time));
